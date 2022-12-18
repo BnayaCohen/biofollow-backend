@@ -85,9 +85,11 @@ async function add(user) {
         // peek only updatable fields!
         const userToAdd = {
             fullname: user.fullname,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            results: user.results,
         }
         const collection = await dbService.getCollection('user')
+        console.log(collection);
         await collection.insertOne(userToAdd)
         return userToAdd
     } catch (err) {
