@@ -85,6 +85,7 @@ async function add(user) {
         // peek only updatable fields!
         const userToAdd = {
             fullname: user.fullname,
+            digits: user.digits,
             createdAt: Date.now(),
             results: user.results,
         }
