@@ -11,11 +11,20 @@ async function getUser(req, res) {
     }
 }
 
+async function isUserExist(req, res) {
+    try {
+        const user = await userService.isUserExist(req.query.params.fullname, req.query.params.digits)
+        res.send(user)
+    } catch (err) {
+        logger.error('Failed to get user', err)
+        res.status(500).send({ err: 'Failed to get user' })
+    }
+}
+
 async function getUsers(req, res) {
     try {
         const filterBy = {
-            txt: req.query?.txt || '',
-            minBalance: +req.query?.minBalance || 0
+            txt: req.query?.params?.txt || '',
         }
         const users = await userService.query(filterBy)
         res.send(users)
@@ -62,5 +71,6 @@ module.exports = {
     getUsers,
     deleteUser,
     updateUser,
-    addUser
+    addUser,
+    isUserExist
 }

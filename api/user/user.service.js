@@ -9,7 +9,8 @@ module.exports = {
     getByUsername,
     remove,
     update,
-    add
+    add,
+    isUserExist
 }
 
 async function query(filterBy = {}) {
@@ -50,6 +51,17 @@ async function getByUsername(username) {
         return user
     } catch (err) {
         logger.error(`while finding user ${username}`, err)
+        throw err
+    }
+}
+
+async function isUserExist(fullname, digits) {
+    try {
+        const collection = await dbService.getCollection('user')
+        const user = await collection.findOne({ fullname, digits })
+        return !!user
+    } catch (err) {
+        logger.error(`while finding user ${fullname}`, err)
         throw err
     }
 }
