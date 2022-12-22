@@ -100,9 +100,9 @@ async function add(user) {
             digits: user.digits,
             createdAt: Date.now(),
             results: user.results,
+            times: user.times
         }
         const collection = await dbService.getCollection('user')
-        console.log(collection);
         await collection.insertOne(userToAdd)
         return userToAdd
     } catch (err) {
