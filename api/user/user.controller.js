@@ -11,13 +11,13 @@ async function getUser(req, res) {
     }
 }
 
-async function isUserExist(req, res) {
+async function getUserCounter(req, res) {
     try {
-        const user = await userService.isUserExist(req.query.params.fullname, req.query.params.digits)
-        res.send(user)
+        const userCounter = await userService.getUserCounter(req.query.params.fullname.toLowerCase(), req.query.params.digits.toLowerCase())
+        res.send({userCounter})
     } catch (err) {
-        logger.error('Failed to get user', err)
-        res.status(500).send({ err: 'Failed to get user' })
+        logger.error('Failed to get user counter', err)
+        res.status(500).send({ err: 'Failed to get user counter' })
     }
 }
 
@@ -72,5 +72,5 @@ module.exports = {
     deleteUser,
     updateUser,
     addUser,
-    isUserExist
+    getUserCounter
 }

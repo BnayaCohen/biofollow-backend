@@ -10,7 +10,7 @@ module.exports = {
     remove,
     update,
     add,
-    isUserExist
+    getUserCounter
 }
 
 async function query(filterBy = {}) {
@@ -55,13 +55,15 @@ async function getByUsername(username) {
     }
 }
 
-async function isUserExist(fullname, digits) {
+async function getUserCounter(fullname, digits) {
     try {
         const collection = await dbService.getCollection('user')
-        const user = await collection.findOne({ fullname, digits })
-        return !!user
+        const users = await collection.find({ fullname, digits }).toArray()
+        if (!users || users.length === 0) return 0
+
+        return Math.max(...users.map(u => u.counter))
     } catch (err) {
-        logger.error(`while finding user ${fullname}`, err)
+        logger.error(`while finding counter user ${fullname}`, err)
         throw err
     }
 }
@@ -96,11 +98,12 @@ async function add(user) {
     try {
         // peek only updatable fields!
         const userToAdd = {
-            fullname: user.fullname,
-            digits: user.digits,
+            fullname: user.fullname.toLowerCase(),
+            digits: user.digits.toLowerCase(),
             createdAt: Date.now(),
             results: user.results,
-            times: user.times
+            times: user.times,
+            counter: user.counter
         }
         const collection = await dbService.getCollection('user')
         await collection.insertOne(userToAdd)
@@ -123,5 +126,3 @@ function _buildCriteria(filterBy) {
     }
     return criteria
 }
-
-
